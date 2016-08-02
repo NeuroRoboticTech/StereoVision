@@ -89,6 +89,7 @@ def calibrate_folder(args):
         square_size: Size of chessboard squares in cm
         output_folder: Folder to write calibration to
     """
+    print "file: " + args.input_files[0]
     height, width = cv2.imread(args.input_files[0]).shape[:2]
     calibrator = StereoCalibrator(args.rows, args.columns, args.square_size,
                                   (width, height))
@@ -99,11 +100,21 @@ def calibrate_folder(args):
     progress.start()
     while args.input_files:
         left, right = args.input_files[:2]
-        img_left, im_right = cv2.imread(left), cv2.imread(right)
-        calibrator.add_corners((img_left, im_right),
-                               show_results=args.show_chessboards)
-        args.input_files = args.input_files[2:]
-        progress.update(progress.maxval - len(args.input_files))
+
+        print "processing: "
+        print "    %s" %  left
+        print "    %s" %  right
+        print ""
+
+        img_left, img_right = cv2.imread(left), cv2.imread(right)
+
+        if img_left is not None and img_right is not None:
+          calibrator.add_corners((img_left, img_right),
+                                 show_results=args.show_chessboards)
+          args.input_files = args.input_files[2:]
+          progress.update(progress.maxval - len(args.input_files))
+        else:
+          print "error loading images."
 
     progress.finish()
     print("Calibrating cameras. This can take a while.")

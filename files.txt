@@ -1,0 +1,6 @@
+/usr/local/lib/python2.7/dist-packages/StereoVision-1.0.3-py2.7.egg
+/usr/local/bin/calibrate_cameras
+/usr/local/bin/tune_blockmatcher
+/usr/local/bin/show_webcams
+/usr/local/bin/images_to_pointcloud
+/usr/local/bin/capture_chessboards

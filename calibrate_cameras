@@ -49,6 +49,12 @@ def main():
 
     print args.input_folder
     args.input_files = find_files(args.input_folder)
+    
+    #print "input files:"
+    #print args.input_files
+    #print ""
+    #print ""
+
     calibrate_folder(args)
 
 

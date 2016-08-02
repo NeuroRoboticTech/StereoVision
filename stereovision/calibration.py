@@ -164,8 +164,10 @@ class StereoCalibrator(object):
         cv2.drawChessboardCorners(temp, (self.rows, self.columns), corners,
                                   True)
         window_name = "Chessboard"
-        cv2.imshow(window_name, temp)
-        if cv2.waitKey(0):
+        new_img = cv2.resize(temp,None,fx=0.5, fy=0.5, interpolation = cv2.INTER_CUBIC)
+        cv2.imshow(window_name, new_img)
+        cv2.moveWindow(window_name, 200, 200) 
+        if cv2.waitKey(2000):
             cv2.destroyWindow(window_name)
 
     def __init__(self, rows, columns, square_size, image_size):
@@ -221,24 +223,28 @@ class StereoCalibrator(object):
                     100, 1e-5)
         flags = (cv2.CALIB_FIX_ASPECT_RATIO + cv2.CALIB_ZERO_TANGENT_DIST +
                  cv2.CALIB_SAME_FOCAL_LENGTH)
-        calib = StereoCalibration()
-        (calib.cam_mats["left"], calib.dist_coefs["left"],
+        print "Calling cv2.stereoCalibrate"
+        print "image size:" + str(self.image_size)
+
+        calib = StereoCalibration()        
+
+        (retval, calib.cam_mats["left"], calib.dist_coefs["left"],
          calib.cam_mats["right"], calib.dist_coefs["right"],
          calib.rot_mat, calib.trans_vec, calib.e_mat,
          calib.f_mat) = cv2.stereoCalibrate(self.object_points,
                                             self.image_points["left"],
                                             self.image_points["right"],
+                                            self.image_size,
                                             calib.cam_mats["left"],
                                             calib.dist_coefs["left"],
                                             calib.cam_mats["right"],
                                             calib.dist_coefs["right"],
-                                            self.image_size,
                                             calib.rot_mat,
                                             calib.trans_vec,
                                             calib.e_mat,
                                             calib.f_mat,
                                             criteria=criteria,
-                                            flags=flags)[1:]
+                                            flags=flags)
         (calib.rect_trans["left"], calib.rect_trans["right"],
          calib.proj_mats["left"], calib.proj_mats["right"],
          calib.disp_to_depth_mat, calib.valid_boxes["left"],
