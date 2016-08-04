@@ -1,0 +1,26 @@
+python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 --show-chessboards /media/dcofer/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/ /media/dcofer/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/calibration
+ 
+
+python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 --show-chessboards /media/ubuntu/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/ /media/ubuntu/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/calibration
+
+
+1-4
+15.9995 
+
+1-10
+8.5085
+
+1-20
+5.203
+
+1-30
+4.2299
+
+all 
+3.5022
+
+
+
+
+python tune_blockmatcher --bm_settings bm_settings.json /media/dcofer/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/calibration /media/dcofer/Backup/weed_analysis/weed_images/stereo/box
+
