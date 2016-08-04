@@ -156,35 +156,6 @@ class BMTuner(object):
             return
         self.update_disparity_map()
 
-    def _initialize_trackbars(self):
-        """
-        Initialize trackbars by discovering ``block_matcher``'s parameters.
-        """
-        for parameter in self.block_matcher.parameter_maxima.keys():
-            maximum = self.block_matcher.parameter_maxima[parameter]
-            if not maximum:
-                maximum = self.shortest_dimension
-            cv2.createTrackbar(parameter, self.window_name,
-                               self.block_matcher.__getattribute__(parameter),
-                               maximum,
-                               nothing)
-
-    def get_trackbar_values(self):
-        """
-        go through and read trackbar values.
-        """
-        for parameter in self.block_matcher.parameter_maxima.keys():
-            old_val = self.block_matcher.__getattribute__(parameter)
-            new_val = cv2.getTrackbarPos(parameter, self.window_name)
-            diff = new_val - old_val            
-            print "old: " + str(old_val) + ", new: " + str(new_val) + ", diff: " + str(diff)
-
-            if parameter == 'numDisparities' and diff <> 0:
-              new_val = int(old_val + (16*math.copysign(1, diff)))
-              print "changed numDisparities to " + str(new_val)
-
-            self.block_matcher.__setattr__(parameter, new_val)
-
     def _save_bm_state(self):
         """Save current state of ``block_matcher``."""
         for parameter in self.block_matcher.parameter_maxima.keys():
@@ -210,8 +181,6 @@ class BMTuner(object):
         self.bm_settings = {}
         for parameter in self.block_matcher.parameter_maxima.keys():
             self.bm_settings[parameter] = []
-        cv2.namedWindow(self.window_name)
-        self._initialize_trackbars()
         self.tune_pair(image_pair)
 
     def update_disparity_map(self):
@@ -222,17 +191,17 @@ class BMTuner(object):
         255, because OpenCV multiplies it by 255 when displaying. This is
         because the pixels are stored as floating points.
         """
-        key = ord('a')
-        while not key == ord('n'): 
-          disparity = self.block_matcher.get_disparity(self.pair)
-          norm_coeff = 255 / disparity.max()
-          new_disp = cv2.resize(disparity,None,fx=0.3, fy=0.3, interpolation = cv2.INTER_CUBIC)
+        #key = ord('a')
+        #while not key == ord('n'): 
+        disparity = self.block_matcher.get_disparity(self.pair)
+        norm_coeff = 255 / disparity.max()
+        new_disp = cv2.resize(disparity,None,fx=0.3, fy=0.3, interpolation = cv2.INTER_CUBIC)
 
-          cv2.imshow(self.window_name, new_disp * norm_coeff / 255)
-          print "repainted image"
-          key = cv2.waitKey() & 0xFF
-
-          self.get_trackbar_values()
+        self.cvImage = (new_disp * norm_coeff / 255)
+        
+        #cv2.imshow(self.window_name, self.cvImage)
+        #print "repainted image"
+        #key = cv2.waitKey() & 0xFF
 
           
     def tune_pair(self, pair):

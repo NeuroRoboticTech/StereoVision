@@ -1,165 +1,181 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'block_tuner.ui'
+# Form implementation generated from reading ui file 'E:\StereoVision\block_tuner.ui'
 #
-# Created: Thu Aug  4 08:09:05 2016
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+
+from argparse import ArgumentParser
+
+import cv2
+import numpy as np
+
+from stereovision.blockmatchers import StereoBM, StereoSGBM
+from stereovision.calibration import StereoCalibration
+from stereovision.ui_utils import find_files, BMTuner, STEREO_BM_FLAG
 
 try:
-    _fromUtf8 = QtCore.QString.fromUtf8
+    _fromUtf8 = QString.fromUtf8
 except AttributeError:
     def _fromUtf8(s):
         return s
 
 try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
+    _encoding = QApplication.UnicodeUTF8
     def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+        return QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+        return QApplication.translate(context, text, disambig)
 
 class Ui_BlockTunerDlg(object):
     def setupUi(self, BlockTunerDlg):
         BlockTunerDlg.setObjectName(_fromUtf8("BlockTunerDlg"))
         BlockTunerDlg.resize(469, 671)
-        self.buttonBox = QtGui.QDialogButtonBox(BlockTunerDlg)
-        self.buttonBox.setGeometry(QtCore.QRect(110, 630, 341, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox = QDialogButtonBox(BlockTunerDlg)
+        self.buttonBox.setGeometry(QRect(360, 630, 91, 32))
+        self.buttonBox.setOrientation(Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
-        self.textP1 = QtGui.QLineEdit(BlockTunerDlg)
-        self.textP1.setGeometry(QtCore.QRect(10, 40, 70, 30))
+        self.textP1 = QLineEdit(BlockTunerDlg)
+        self.textP1.setGeometry(QRect(10, 40, 70, 30))
         self.textP1.setObjectName(_fromUtf8("textP1"))
-        self.labelP1 = QtGui.QLabel(BlockTunerDlg)
-        self.labelP1.setGeometry(QtCore.QRect(100, 20, 360, 20))
-        self.labelP1.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelP1 = QLabel(BlockTunerDlg)
+        self.labelP1.setGeometry(QRect(100, 20, 360, 20))
+        self.labelP1.setAlignment(Qt.AlignCenter)
         self.labelP1.setObjectName(_fromUtf8("labelP1"))
-        self.sliderP1 = QtGui.QSlider(BlockTunerDlg)
-        self.sliderP1.setGeometry(QtCore.QRect(100, 40, 359, 29))
+        self.sliderP1 = QSlider(BlockTunerDlg)
+        self.sliderP1.setGeometry(QRect(100, 40, 359, 29))
         self.sliderP1.setMaximum(1536)
-        self.sliderP1.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderP1.setOrientation(Qt.Horizontal)
         self.sliderP1.setObjectName(_fromUtf8("sliderP1"))
-        self.labelP2 = QtGui.QLabel(BlockTunerDlg)
-        self.labelP2.setGeometry(QtCore.QRect(100, 80, 360, 20))
-        self.labelP2.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelP2 = QLabel(BlockTunerDlg)
+        self.labelP2.setGeometry(QRect(100, 80, 360, 20))
+        self.labelP2.setAlignment(Qt.AlignCenter)
         self.labelP2.setObjectName(_fromUtf8("labelP2"))
-        self.sliderP2 = QtGui.QSlider(BlockTunerDlg)
-        self.sliderP2.setGeometry(QtCore.QRect(100, 100, 359, 29))
+        self.sliderP2 = QSlider(BlockTunerDlg)
+        self.sliderP2.setGeometry(QRect(100, 100, 359, 29))
         self.sliderP2.setMaximum(1536)
-        self.sliderP2.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderP2.setOrientation(Qt.Horizontal)
         self.sliderP2.setObjectName(_fromUtf8("sliderP2"))
-        self.labelNumDisp = QtGui.QLabel(BlockTunerDlg)
-        self.labelNumDisp.setGeometry(QtCore.QRect(100, 140, 360, 20))
-        self.labelNumDisp.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelNumDisp = QLabel(BlockTunerDlg)
+        self.labelNumDisp.setGeometry(QRect(100, 140, 360, 20))
+        self.labelNumDisp.setAlignment(Qt.AlignCenter)
         self.labelNumDisp.setObjectName(_fromUtf8("labelNumDisp"))
-        self.sliderNumDisp = QtGui.QSlider(BlockTunerDlg)
-        self.sliderNumDisp.setGeometry(QtCore.QRect(100, 160, 359, 29))
+        self.sliderNumDisp = QSlider(BlockTunerDlg)
+        self.sliderNumDisp.setGeometry(QRect(100, 160, 359, 29))
         self.sliderNumDisp.setMaximum(1536)
         self.sliderNumDisp.setSingleStep(16)
-        self.sliderNumDisp.setPageStep(32)
-        self.sliderNumDisp.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderNumDisp.setPageStep(16)
+        self.sliderNumDisp.setOrientation(Qt.Horizontal)
         self.sliderNumDisp.setObjectName(_fromUtf8("sliderNumDisp"))
-        self.labelSpeckleRange = QtGui.QLabel(BlockTunerDlg)
-        self.labelSpeckleRange.setGeometry(QtCore.QRect(100, 200, 360, 20))
-        self.labelSpeckleRange.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelSpeckleRange = QLabel(BlockTunerDlg)
+        self.labelSpeckleRange.setGeometry(QRect(100, 200, 360, 20))
+        self.labelSpeckleRange.setAlignment(Qt.AlignCenter)
         self.labelSpeckleRange.setObjectName(_fromUtf8("labelSpeckleRange"))
-        self.sliderSpeckleRange = QtGui.QSlider(BlockTunerDlg)
-        self.sliderSpeckleRange.setGeometry(QtCore.QRect(100, 220, 359, 29))
+        self.sliderSpeckleRange = QSlider(BlockTunerDlg)
+        self.sliderSpeckleRange.setGeometry(QRect(100, 220, 359, 29))
         self.sliderSpeckleRange.setMaximum(2)
         self.sliderSpeckleRange.setSingleStep(1)
-        self.sliderSpeckleRange.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderSpeckleRange.setOrientation(Qt.Horizontal)
         self.sliderSpeckleRange.setObjectName(_fromUtf8("sliderSpeckleRange"))
-        self.labelFullDP = QtGui.QLabel(BlockTunerDlg)
-        self.labelFullDP.setGeometry(QtCore.QRect(100, 320, 360, 20))
-        self.labelFullDP.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelFullDP = QLabel(BlockTunerDlg)
+        self.labelFullDP.setGeometry(QRect(100, 320, 360, 20))
+        self.labelFullDP.setAlignment(Qt.AlignCenter)
         self.labelFullDP.setObjectName(_fromUtf8("labelFullDP"))
-        self.sliderFullDP = QtGui.QSlider(BlockTunerDlg)
-        self.sliderFullDP.setGeometry(QtCore.QRect(100, 340, 359, 29))
+        self.sliderFullDP = QSlider(BlockTunerDlg)
+        self.sliderFullDP.setGeometry(QRect(100, 340, 359, 29))
         self.sliderFullDP.setMaximum(1)
-        self.sliderFullDP.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderFullDP.setOrientation(Qt.Horizontal)
         self.sliderFullDP.setObjectName(_fromUtf8("sliderFullDP"))
-        self.labelDisp12MaxDiff = QtGui.QLabel(BlockTunerDlg)
-        self.labelDisp12MaxDiff.setGeometry(QtCore.QRect(100, 380, 360, 20))
-        self.labelDisp12MaxDiff.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelDisp12MaxDiff = QLabel(BlockTunerDlg)
+        self.labelDisp12MaxDiff.setGeometry(QRect(100, 380, 360, 20))
+        self.labelDisp12MaxDiff.setAlignment(Qt.AlignCenter)
         self.labelDisp12MaxDiff.setObjectName(_fromUtf8("labelDisp12MaxDiff"))
-        self.sliderDisp12MaxDiff = QtGui.QSlider(BlockTunerDlg)
-        self.sliderDisp12MaxDiff.setGeometry(QtCore.QRect(100, 400, 359, 29))
+        self.sliderDisp12MaxDiff = QSlider(BlockTunerDlg)
+        self.sliderDisp12MaxDiff.setGeometry(QRect(100, 400, 359, 29))
         self.sliderDisp12MaxDiff.setMaximum(1536)
-        self.sliderDisp12MaxDiff.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderDisp12MaxDiff.setOrientation(Qt.Horizontal)
         self.sliderDisp12MaxDiff.setObjectName(_fromUtf8("sliderDisp12MaxDiff"))
-        self.labelMinDisparity = QtGui.QLabel(BlockTunerDlg)
-        self.labelMinDisparity.setGeometry(QtCore.QRect(100, 500, 360, 20))
-        self.labelMinDisparity.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelMinDisparity = QLabel(BlockTunerDlg)
+        self.labelMinDisparity.setGeometry(QRect(100, 500, 360, 20))
+        self.labelMinDisparity.setAlignment(Qt.AlignCenter)
         self.labelMinDisparity.setObjectName(_fromUtf8("labelMinDisparity"))
-        self.sliderMinDisparity = QtGui.QSlider(BlockTunerDlg)
-        self.sliderMinDisparity.setGeometry(QtCore.QRect(100, 520, 359, 29))
+        self.sliderMinDisparity = QSlider(BlockTunerDlg)
+        self.sliderMinDisparity.setGeometry(QRect(100, 520, 359, 29))
         self.sliderMinDisparity.setMaximum(1536)
-        self.sliderMinDisparity.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderMinDisparity.setOrientation(Qt.Horizontal)
         self.sliderMinDisparity.setObjectName(_fromUtf8("sliderMinDisparity"))
-        self.labelSADWindowSize = QtGui.QLabel(BlockTunerDlg)
-        self.labelSADWindowSize.setGeometry(QtCore.QRect(100, 440, 360, 20))
-        self.labelSADWindowSize.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelSADWindowSize = QLabel(BlockTunerDlg)
+        self.labelSADWindowSize.setGeometry(QRect(100, 440, 360, 20))
+        self.labelSADWindowSize.setAlignment(Qt.AlignCenter)
         self.labelSADWindowSize.setObjectName(_fromUtf8("labelSADWindowSize"))
-        self.sliderSADWindowSize = QtGui.QSlider(BlockTunerDlg)
-        self.sliderSADWindowSize.setGeometry(QtCore.QRect(100, 460, 359, 29))
+        self.sliderSADWindowSize = QSlider(BlockTunerDlg)
+        self.sliderSADWindowSize.setGeometry(QRect(100, 460, 359, 29))
         self.sliderSADWindowSize.setMaximum(11)
-        self.sliderSADWindowSize.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderSADWindowSize.setOrientation(Qt.Horizontal)
         self.sliderSADWindowSize.setObjectName(_fromUtf8("sliderSADWindowSize"))
-        self.labelSpeckleWindowSize = QtGui.QLabel(BlockTunerDlg)
-        self.labelSpeckleWindowSize.setGeometry(QtCore.QRect(100, 260, 360, 20))
-        self.labelSpeckleWindowSize.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelSpeckleWindowSize = QLabel(BlockTunerDlg)
+        self.labelSpeckleWindowSize.setGeometry(QRect(100, 260, 360, 20))
+        self.labelSpeckleWindowSize.setAlignment(Qt.AlignCenter)
         self.labelSpeckleWindowSize.setObjectName(_fromUtf8("labelSpeckleWindowSize"))
-        self.sliderSpeckleWindowSize = QtGui.QSlider(BlockTunerDlg)
-        self.sliderSpeckleWindowSize.setGeometry(QtCore.QRect(100, 280, 359, 29))
+        self.sliderSpeckleWindowSize = QSlider(BlockTunerDlg)
+        self.sliderSpeckleWindowSize.setGeometry(QRect(100, 280, 359, 29))
         self.sliderSpeckleWindowSize.setMaximum(200)
-        self.sliderSpeckleWindowSize.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderSpeckleWindowSize.setOrientation(Qt.Horizontal)
         self.sliderSpeckleWindowSize.setObjectName(_fromUtf8("sliderSpeckleWindowSize"))
-        self.textP2 = QtGui.QLineEdit(BlockTunerDlg)
-        self.textP2.setGeometry(QtCore.QRect(10, 100, 70, 30))
+        self.textP2 = QLineEdit(BlockTunerDlg)
+        self.textP2.setGeometry(QRect(10, 100, 70, 30))
         self.textP2.setObjectName(_fromUtf8("textP2"))
-        self.textNumDisp = QtGui.QLineEdit(BlockTunerDlg)
-        self.textNumDisp.setGeometry(QtCore.QRect(10, 160, 70, 30))
+        self.textNumDisp = QLineEdit(BlockTunerDlg)
+        self.textNumDisp.setGeometry(QRect(10, 160, 70, 30))
         self.textNumDisp.setObjectName(_fromUtf8("textNumDisp"))
-        self.textSpeckleRange = QtGui.QLineEdit(BlockTunerDlg)
-        self.textSpeckleRange.setGeometry(QtCore.QRect(10, 220, 70, 30))
+        self.textSpeckleRange = QLineEdit(BlockTunerDlg)
+        self.textSpeckleRange.setGeometry(QRect(10, 220, 70, 30))
         self.textSpeckleRange.setObjectName(_fromUtf8("textSpeckleRange"))
-        self.textSpeckleWindowSize = QtGui.QLineEdit(BlockTunerDlg)
-        self.textSpeckleWindowSize.setGeometry(QtCore.QRect(10, 280, 70, 30))
+        self.textSpeckleWindowSize = QLineEdit(BlockTunerDlg)
+        self.textSpeckleWindowSize.setGeometry(QRect(10, 280, 70, 30))
         self.textSpeckleWindowSize.setObjectName(_fromUtf8("textSpeckleWindowSize"))
-        self.textFullDP = QtGui.QLineEdit(BlockTunerDlg)
-        self.textFullDP.setGeometry(QtCore.QRect(10, 340, 70, 30))
+        self.textFullDP = QLineEdit(BlockTunerDlg)
+        self.textFullDP.setGeometry(QRect(10, 340, 70, 30))
         self.textFullDP.setObjectName(_fromUtf8("textFullDP"))
-        self.textDisp12MaxDiff = QtGui.QLineEdit(BlockTunerDlg)
-        self.textDisp12MaxDiff.setGeometry(QtCore.QRect(10, 400, 70, 30))
+        self.textDisp12MaxDiff = QLineEdit(BlockTunerDlg)
+        self.textDisp12MaxDiff.setGeometry(QRect(10, 400, 70, 30))
         self.textDisp12MaxDiff.setObjectName(_fromUtf8("textDisp12MaxDiff"))
-        self.textSADWindowSize = QtGui.QLineEdit(BlockTunerDlg)
-        self.textSADWindowSize.setGeometry(QtCore.QRect(10, 460, 70, 30))
+        self.textSADWindowSize = QLineEdit(BlockTunerDlg)
+        self.textSADWindowSize.setGeometry(QRect(10, 460, 70, 30))
         self.textSADWindowSize.setObjectName(_fromUtf8("textSADWindowSize"))
-        self.textMinDisp = QtGui.QLineEdit(BlockTunerDlg)
-        self.textMinDisp.setGeometry(QtCore.QRect(10, 520, 70, 30))
+        self.textMinDisp = QLineEdit(BlockTunerDlg)
+        self.textMinDisp.setGeometry(QRect(10, 520, 70, 30))
         self.textMinDisp.setObjectName(_fromUtf8("textMinDisp"))
-        self.textUniqueRatio = QtGui.QLineEdit(BlockTunerDlg)
-        self.textUniqueRatio.setGeometry(QtCore.QRect(10, 580, 70, 30))
+        self.textUniqueRatio = QLineEdit(BlockTunerDlg)
+        self.textUniqueRatio.setGeometry(QRect(10, 580, 70, 30))
         self.textUniqueRatio.setObjectName(_fromUtf8("textUniqueRatio"))
-        self.sliderUniqueRatio = QtGui.QSlider(BlockTunerDlg)
-        self.sliderUniqueRatio.setGeometry(QtCore.QRect(100, 580, 359, 29))
+        self.sliderUniqueRatio = QSlider(BlockTunerDlg)
+        self.sliderUniqueRatio.setGeometry(QRect(100, 580, 359, 29))
         self.sliderUniqueRatio.setMaximum(15)
-        self.sliderUniqueRatio.setOrientation(QtCore.Qt.Horizontal)
+        self.sliderUniqueRatio.setOrientation(Qt.Horizontal)
         self.sliderUniqueRatio.setObjectName(_fromUtf8("sliderUniqueRatio"))
-        self.labelUniqueRatio = QtGui.QLabel(BlockTunerDlg)
-        self.labelUniqueRatio.setGeometry(QtCore.QRect(100, 560, 360, 20))
-        self.labelUniqueRatio.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelUniqueRatio = QLabel(BlockTunerDlg)
+        self.labelUniqueRatio.setGeometry(QRect(100, 560, 360, 20))
+        self.labelUniqueRatio.setAlignment(Qt.AlignCenter)
         self.labelUniqueRatio.setObjectName(_fromUtf8("labelUniqueRatio"))
+        self.pushNextImage = QPushButton(BlockTunerDlg)
+        self.pushNextImage.setGeometry(QRect(10, 640, 75, 23))
+        self.pushNextImage.setObjectName(_fromUtf8("pushNextImage"))
+        self.labelFileInfo = QLabel(BlockTunerDlg)
+        self.labelFileInfo.setGeometry(QRect(120, 640, 201, 21))
+        self.labelFileInfo.setText(_fromUtf8(""))
+        self.labelFileInfo.setObjectName(_fromUtf8("labelFileInfo"))
 
         self.retranslateUi(BlockTunerDlg)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), BlockTunerDlg.accept)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), BlockTunerDlg.reject)
-        QtCore.QMetaObject.connectSlotsByName(BlockTunerDlg)
+        QObject.connect(self.buttonBox, SIGNAL(_fromUtf8("accepted()")), BlockTunerDlg.accept)
+        QObject.connect(self.buttonBox, SIGNAL(_fromUtf8("rejected()")), BlockTunerDlg.reject)
+        QMetaObject.connectSlotsByName(BlockTunerDlg)
 
     def retranslateUi(self, BlockTunerDlg):
         BlockTunerDlg.setWindowTitle(_translate("BlockTunerDlg", "Block Tuner Dialog", None))
@@ -183,6 +199,7 @@ class Ui_BlockTunerDlg(object):
         self.sliderSpeckleWindowSize.setToolTip(_translate("BlockTunerDlg", "P1", None))
         self.sliderUniqueRatio.setToolTip(_translate("BlockTunerDlg", "P1", None))
         self.labelUniqueRatio.setText(_translate("BlockTunerDlg", "Uniqueness Ratio", None))
+        self.pushNextImage.setText(_translate("BlockTunerDlg", "Next", None))
 
     def connectSlots(self):
       self.updateTextValues()
@@ -209,26 +226,27 @@ class Ui_BlockTunerDlg(object):
       self.sliderSpeckleWindowSize.valueChanged.connect(self.changedSpeckleWindowSize)
       self.sliderUniqueRatio.valueChanged.connect(self.changedUniqueRatio)
 
-      self.textP1.setValidator(QtGui.QIntValidator(0, 1536))
-      self.textP2.setValidator(QtGui.QIntValidator(0, 1536))
-      self.textNumDisp.setValidator(QtGui.QIntValidator(16, 1536))
-      self.textSpeckleRange.setValidator(QtGui.QIntValidator(0, 2))
-      self.textFullDP.setValidator(QtGui.QIntValidator(0, 1))
-      self.textDisp12MaxDiff.setValidator(QtGui.QIntValidator(0, 1536))
-      self.textMinDisp.setValidator(QtGui.QIntValidator(0, 1536))
-      self.textSADWindowSize.setValidator(QtGui.QIntValidator(1, 11))
-      self.textSpeckleWindowSize.setValidator(QtGui.QIntValidator(1, 200))
-      self.textUniqueRatio.setValidator(QtGui.QIntValidator(0, 15))
+      self.textP1.setValidator(QIntValidator(0, 1536))
+      self.textP2.setValidator(QIntValidator(0, 1536))
+      self.textNumDisp.setValidator(QIntValidator(16, 1536))
+      self.textSpeckleRange.setValidator(QIntValidator(0, 2))
+      self.textFullDP.setValidator(QIntValidator(0, 1))
+      self.textDisp12MaxDiff.setValidator(QIntValidator(0, 1536))
+      self.textMinDisp.setValidator(QIntValidator(0, 1536))
+      self.textSADWindowSize.setValidator(QIntValidator(1, 11))
+      self.textSpeckleWindowSize.setValidator(QIntValidator(1, 200))
+      self.textUniqueRatio.setValidator(QIntValidator(0, 15))
 
       self.textP1.textChanged.connect(self.txtChangedP1)
       self.textP2.textChanged.connect(self.txtChangedP2)
-      #self.textNumDisp.valueChanged.connect(self.changedNumDisp)
-      #self.textSpeckleRange.valueChanged.connect(self.changedSpeckleRange)
-      #self.textFullDP.valueChanged.connect(self.changedFullDP)
-      #self.textDisp12MaxDiff.valueChanged.connect(self.changedDisp12MaxDiff)
-      #self.textMinDisp.valueChanged.connect(self.changedMinDisp)
-      #self.textSADWindowSize.valueChanged.connect(self.changedSADWindowSize)
-      #self.textSpeckleWindowSize.valueChanged.connect(self.changedSpeckleWindowSize)
+      self.textNumDisp.textChanged.connect(self.txtChangedNumDisp)
+      self.textSpeckleRange.textChanged.connect(self.txtChangedSpeckleRange)
+      self.textFullDP.textChanged.connect(self.txtChangedFullDP)
+      self.textDisp12MaxDiff.textChanged.connect(self.txtChangedDisp12MaxDiff)
+      self.textMinDisp.textChanged.connect(self.txtChangedMinDisp)
+      self.textSADWindowSize.textChanged.connect(self.txtChangedSADWindowSize)
+      self.textSpeckleWindowSize.textChanged.connect(self.txtChangedSpeckleWindowSize)
+      self.textUniqueRatio.textChanged.connect(self.txtChangedUniqueRatio)
 
     def updateTextValues(self):
       self.textP1.setText(str(self.sliderP1.value()))
@@ -305,8 +323,46 @@ class Ui_BlockTunerDlg(object):
       else:
         self.sliderP2.setValue(new_p2)
 
+    def txtChangedNumDisp(self):
+      new = int(self.textNumDisp.text())
+      
+      # the new value must be divisible by 16
+      div_val = int(new / 16)
+      new_val = 16 * div_val
+      
+      self.sliderNumDisp.setValue(new_val)
+      self.textNumDisp.setText(str(new_val))
+
+    def txtChangedSpeckleRange(self):
+      new = int(self.textSpeckleRange.text())
+      self.sliderSpeckleRange.setValue(new)
+
+    def txtChangedFullDP(self):
+      new = int(self.textFullDP.text())
+      self.sliderFullDP.setValue(new)
+
+    def txtChangedDisp12MaxDiff(self):
+      new = int(self.textDisp12MaxDiff.text())
+      self.sliderDisp12MaxDiff.setValue(new)
+
+    def txtChangedMinDisp(self):
+      new = int(self.textMinDisp.text())
+      self.sliderMinDisparity.setValue(new)
+
+    def txtChangedSADWindowSize(self):
+      new = int(self.textSADWindowSize.text())
+      self.sliderSADWindowSize.setValue(new)
+
+    def txtChangedSpeckleWindowSize(self):
+      new = int(self.textSpeckleWindowSize.text())
+      self.sliderSpeckleWindowSize.setValue(new)
+
+    def txtChangedUniqueRatio(self):
+      new = int(self.textUniqueRatio.text())
+      self.sliderUniqueRatio.setValue(new)
+
     def showError(self, txtError):
-      QtGui.QMessageBox.about(self.textP1, "Error", txtError)
+      QMessageBox.about(self.textP1, "Error", txtError)
 
     def setDefaults(self):
       self.sliderP1.setValue(216)
@@ -320,14 +376,103 @@ class Ui_BlockTunerDlg(object):
       self.sliderSADWindowSize.setValue(3)
       self.sliderSpeckleWindowSize.setValue(100)
 
+    def incrementImage(self):
+      if input_files:
+        image_pair = [cv2.imread(image) for image in input_files[:2]]
+        rectified_pair = calibration.rectify(image_pair)
+        tuner.tune_pair(rectified_pair)
+        input_files = input_files[2:]
+
+class ImageDialog(QDialog):
+  def __init__(self, parent=None):
+      super(ImageDialog, self).__init__(parent)
+      
+      self.mQImage = None
+      self.cvImage = None
+
+  def setImage(self, img):
+      img_int = img
+      print img_int.shape
+
+      self.cvImage = cv2.merge((img_int, img_int, img_int))
+      #self.cvImage = cv2.imread(r'E:\weed_analysis\weed_images\stereo\box\left_0001.JPG')
+
+      height, width, byteValue = self.cvImage.shape
+      
+      byteValue = byteValue * width
+
+      #cv2.imshow('img', self.cvImage)
+      #cv2.waitKey(1000)
+
+      #color_img = cv2.cvtColor(self.cvImage, cv2.COLOR_GRAY2BGR)
+      color_img2 = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB)
+
+      print color_img2.shape
+      print color_img2[100, 100, :]
+      
+      cv2.imshow('conv', color_img2)
+      #cv2.waitKey(1000)
+
+      self.mQImage = QImage(color_img2, width, height, byteValue, QImage.Format_RGB888)
+
+  def paintEvent(self, QPaintEvent):
+        painter = QPainter()
+        painter.begin(self)
+        if self.mQImage:
+          painter.drawImage(0, 0, self.mQImage)
+        painter.end()
+      
+       
 if __name__ == "__main__":
     import sys
-    app = QtGui.QApplication(sys.argv)
-    BlockTunerDlg = QtGui.QDialog()
+
+    app = QApplication(sys.argv)
+    BlockTunerDlg = QDialog()
     ui = Ui_BlockTunerDlg()
     ui.setupUi(BlockTunerDlg)
     ui.setDefaults()
     ui.connectSlots();
+
+    parser = ArgumentParser(description="Read images taken from a calibrated "
+                           "stereo pair, compute disparity maps from them and "
+                           "show them interactively to the user, allowing the "
+                           "user to tune the stereo block matcher settings in "
+                           "the GUI.", parents=[STEREO_BM_FLAG])
+    parser.add_argument("calibration_folder",
+                        help="Directory where calibration files for the stereo "
+                        "pair are stored.")
+    parser.add_argument("image_folder",
+                        help="Directory where input images are stored.")
+    parser.add_argument("--bm_settings",
+                        help="File to save last block matcher settings to.",
+                        default="")
+    args = parser.parse_args()
+
+    ui.calibration = StereoCalibration(input_folder=args.calibration_folder)
+    ui.input_files = find_files(args.image_folder)
+    if args.use_stereobm:
+        ui.block_matcher = StereoBM()
+    else:
+        ui.block_matcher = StereoSGBM()
+    ui.image_pair = [cv2.imread(image) for image in ui.input_files[:2]]
+    ui.input_files = ui.input_files[2:]
+    ui.rectified_pair = ui.calibration.rectify(ui.image_pair)
+    ui.tuner = BMTuner(ui.block_matcher, ui.calibration, ui.rectified_pair)
+    
+#    ui.incrementImage()
+
     BlockTunerDlg.show()
+
+    w = ImageDialog()
+    w.setImage(ui.tuner.cvImage)
+    w.resize(600, 400)
+    w.show()    
+    
+#    for param in block_matcher.parameter_maxima:
+#        print("{}\n".format(ui.tuner.report_settings(param)))
+#
+#    if args.bm_settings:
+#        ui.block_matcher.save_settings(args.bm_settings)
+
     sys.exit(app.exec_())
 

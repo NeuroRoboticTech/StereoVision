@@ -16,9 +16,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>360</x>
      <y>630</y>
-     <width>341</width>
+     <width>91</width>
      <height>32</height>
     </rect>
    </property>
@@ -26,10 +26,10 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textP1">
+  <widget class="QLineEdit" name="textP1">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -144,7 +144,7 @@
     <number>16</number>
    </property>
    <property name="pageStep">
-    <number>32</number>
+    <number>16</number>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -363,7 +363,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textP2">
+  <widget class="QLineEdit" name="textP2">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -373,7 +373,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textNumDisp">
+  <widget class="QLineEdit" name="textNumDisp">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -383,7 +383,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textSpeckleRange">
+  <widget class="QLineEdit" name="textSpeckleRange">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -393,7 +393,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textSpeckleWindowSize">
+  <widget class="QLineEdit" name="textSpeckleWindowSize">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -403,7 +403,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textFullDP">
+  <widget class="QLineEdit" name="textFullDP">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -413,7 +413,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textDisp12MaxDiff">
+  <widget class="QLineEdit" name="textDisp12MaxDiff">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -423,7 +423,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textSADWindowSize">
+  <widget class="QLineEdit" name="textSADWindowSize">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -433,7 +433,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textMinDisp">
+  <widget class="QLineEdit" name="textMinDisp">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -443,7 +443,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textUniqueRatio">
+  <widget class="QLineEdit" name="textUniqueRatio">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -486,6 +486,32 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushNextImage">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>640</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Next</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelFileInfo">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>640</y>
+     <width>201</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
