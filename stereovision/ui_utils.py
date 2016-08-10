@@ -146,15 +146,14 @@ class BMTuner(object):
     #: Window to show results in
     window_name = "BM Tuner"
 
-    def _set_value(self, parameter, new_value):
+    def setTunerValue(self, parameter, new_value):
         """Try setting new parameter on ``block_matcher`` and update map."""
-        print "set_value callback"
+        print "setTunerValue: " + parameter + ", " + str(new_value)
         try:
             self.block_matcher.__setattr__(parameter, new_value)
         except BadBlockMatcherArgumentError:
             print "block match exception"
             return
-        self.update_disparity_map()
 
     def _save_bm_state(self):
         """Save current state of ``block_matcher``."""
@@ -183,6 +182,8 @@ class BMTuner(object):
             self.bm_settings[parameter] = []
         self.tune_pair(image_pair)
 
+        print self.bm_settings
+
     def update_disparity_map(self):
         """
         Update disparity map in GUI.
@@ -195,12 +196,16 @@ class BMTuner(object):
         #while not key == ord('n'): 
         disparity = self.block_matcher.get_disparity(self.pair)
         norm_coeff = 255 / disparity.max()
-        new_disp = cv2.resize(disparity,None,fx=0.3, fy=0.3, interpolation = cv2.INTER_CUBIC)
+        new_disp = cv2.resize(disparity,None,fx=0.6, fy=0.6, interpolation = cv2.INTER_CUBIC)
 
-        self.cvImage = (new_disp * norm_coeff / 255)
-        
-        #cv2.imshow(self.window_name, self.cvImage)
-        #print "repainted image"
+        disp = (new_disp * norm_coeff / 255)
+        filter_disp = cv2.medianBlur(disp, 5)      
+        filter_disp = cv2.medianBlur(filter_disp, 5)      
+
+        self.cvImage = filter_disp
+
+        cv2.imshow(self.window_name, self.cvImage)
+        print "repainted image"
         #key = cv2.waitKey() & 0xFF
 
           

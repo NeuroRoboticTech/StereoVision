@@ -159,7 +159,16 @@ class CalibratedPair(StereoPair):
     def get_point_cloud(self, pair):
         """Get 3D point cloud from image pair."""
         disparity = self.block_matcher.get_disparity(pair)
-        points = self.block_matcher.get_3d(disparity,
+
+        norm_coeff = 255 / disparity.max()
+        disp = (disparity * norm_coeff / 255)
+        filter_disp = cv2.medianBlur(disp, 5)   
+
+        #cv2.imshow('original', disparity)
+        #cv2.imshow('filtered', filter_disp)
+        #cv2.waitKey(2000)   
+
+        points = self.block_matcher.get_3d(filter_disp,
                                            self.calibration.disp_to_depth_mat)
         colors = cv2.cvtColor(pair[0], cv2.COLOR_BGR2RGB)
         return PointCloud(points, colors)

@@ -302,9 +302,34 @@ class Ui_BlockTunerDlg(object):
     def changedUniqueRatio(self):
       self.textUniqueRatio.setText(str(self.sliderUniqueRatio.value()))
 
-    def sliderReleased(self):
-      print "slider released"
+    def updateTuner(self):
+      p1 = self.sliderP1.value()
+      p2 = self.sliderP2.value()
+      num_disp = self.sliderNumDisp.value()
+      speckle_range = self.sliderSpeckleRange.value()
+      full_dp = self.sliderFullDP.value()
+      disp12 = self.sliderDisp12MaxDiff.value()
+      min_disp = self.sliderMinDisparity.value()
+      sad = self.sliderSADWindowSize.value()
+      speckle_win = self.sliderSpeckleWindowSize.value()
+      unique = self.sliderUniqueRatio.value()
+      
+      self.tuner.setTunerValue('P1', p1)
+      self.tuner.setTunerValue('P2', p2)
+      self.tuner.setTunerValue('numDisparities', num_disp)
+      self.tuner.setTunerValue('speckleRange', speckle_range)
+      self.tuner.setTunerValue('fullDP', full_dp)
+      self.tuner.setTunerValue('disp12MaxDiff', disp12)
+      self.tuner.setTunerValue('minDisparity', min_disp)
+      self.tuner.setTunerValue('SADWindowSize', sad)
+      self.tuner.setTunerValue('speckleWindowSize', speckle_win)
+      self.tuner.setTunerValue('uniquenessRatio', unique)
 
+      self.tuner.update_disparity_map()
+      
+    def sliderReleased(self):
+      self.updateTuner()
+    
     def txtChangedP1(self):
       new_p1 = int(self.textP1.text())
       p2 = int(self.textP2.text())
@@ -365,14 +390,14 @@ class Ui_BlockTunerDlg(object):
       QMessageBox.about(self.textP1, "Error", txtError)
 
     def setDefaults(self):
-      self.sliderP1.setValue(216)
-      self.sliderP2.setValue(864)
-      self.sliderNumDisp.setValue(96)
-      self.sliderSpeckleRange.setValue(2)
+      self.sliderP1.setValue(279)
+      self.sliderP2.setValue(1536)
+      self.sliderNumDisp.setValue(48)
+      self.sliderSpeckleRange.setValue(1)
       self.sliderFullDP.setValue(0)
-      self.sliderUniqueRatio.setValue(10)
+      self.sliderUniqueRatio.setValue(9)
       self.sliderDisp12MaxDiff.setValue(1)
-      self.sliderMinDisparity.setValue(16)
+      self.sliderMinDisparity.setValue(12)
       self.sliderSADWindowSize.setValue(3)
       self.sliderSpeckleWindowSize.setValue(100)
 
@@ -382,47 +407,8 @@ class Ui_BlockTunerDlg(object):
         rectified_pair = calibration.rectify(image_pair)
         tuner.tune_pair(rectified_pair)
         input_files = input_files[2:]
-
-class ImageDialog(QDialog):
-  def __init__(self, parent=None):
-      super(ImageDialog, self).__init__(parent)
       
-      self.mQImage = None
-      self.cvImage = None
-
-  def setImage(self, img):
-      img_int = img
-      print img_int.shape
-
-      self.cvImage = cv2.merge((img_int, img_int, img_int))
-      #self.cvImage = cv2.imread(r'E:\weed_analysis\weed_images\stereo\box\left_0001.JPG')
-
-      height, width, byteValue = self.cvImage.shape
       
-      byteValue = byteValue * width
-
-      #cv2.imshow('img', self.cvImage)
-      #cv2.waitKey(1000)
-
-      #color_img = cv2.cvtColor(self.cvImage, cv2.COLOR_GRAY2BGR)
-      color_img2 = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB)
-
-      print color_img2.shape
-      print color_img2[100, 100, :]
-      
-      cv2.imshow('conv', color_img2)
-      #cv2.waitKey(1000)
-
-      self.mQImage = QImage(color_img2, width, height, byteValue, QImage.Format_RGB888)
-
-  def paintEvent(self, QPaintEvent):
-        painter = QPainter()
-        painter.begin(self)
-        if self.mQImage:
-          painter.drawImage(0, 0, self.mQImage)
-        painter.end()
-      
-       
 if __name__ == "__main__":
     import sys
 
@@ -458,15 +444,8 @@ if __name__ == "__main__":
     ui.input_files = ui.input_files[2:]
     ui.rectified_pair = ui.calibration.rectify(ui.image_pair)
     ui.tuner = BMTuner(ui.block_matcher, ui.calibration, ui.rectified_pair)
-    
-#    ui.incrementImage()
 
     BlockTunerDlg.show()
-
-    w = ImageDialog()
-    w.setImage(ui.tuner.cvImage)
-    w.resize(600, 400)
-    w.show()    
     
 #    for param in block_matcher.parameter_maxima:
 #        print("{}\n".format(ui.tuner.report_settings(param)))

@@ -22,5 +22,29 @@ all
 
 
 
-python tune_blockmatcher --bm_settings bm_settings.json /media/dcofer/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/calibration /media/dcofer/Backup/weed_analysis/weed_images/stereo/box
+python tune_blockmatcher --bm_settings bm_settings_corn.json /media/dcofer/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/calibration /media/dcofer/Backup/weed_analysis/weed_images/stereo/box
+
+
+
+shed 0010
+279, 1117, 64, 1, 100, 0, 1, 3, 12, 13
+
+shed 0011
+279, 1536, 32, 1, 100, 0, 1, 3, 12, 13
+
+
+shed 0012
+279, 1536, 48, 1, 100, 0, 1, 3, 12, 13 (9?)
+
+corn 002
+284, 1536, 288, 1, 100, 0, 423, 3, 5, 9
+
+corn 001
+275, 1536, 64, 1, 100, 0, 419, 3, 12, 9
+
+
+279, 1536, 176, 1, 100, 0, 1333, 3, 12, 7
+
+
+python images_to_pointcloud --bm_settings ./bm_settings_corn.json /media/dcofer/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/calibration /media/dcofer/Backup/weed_analysis/weed_images/stereo/box/left_0001.JPG /media/dcofer/Backup/weed_analysis/weed_images/stereo/box/right_0001.JPG /media/dcofer/Backup/weed_analysis/weed_images/stereo/box/pc_0001.PLY
 
