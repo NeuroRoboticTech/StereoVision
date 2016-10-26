@@ -36,3 +36,11 @@ Author: `Daniel Lee <Lee.Daniel.1986@gmail.com>`_
 .. _Stereo calibration: https://erget.wordpress.com/2014/02/28/calibrating-a-stereo-pair-with-python/
 .. _Tuning the block matcher: https://erget.wordpress.com/2014/05/02/producing-3d-point-clouds-from-stereo-photos-tuning-the-block-matcher-for-best-results/
 .. _Producing point clouds: https://erget.wordpress.com/2014/04/27/producing-3d-point-clouds-with-a-stereo-camera-in-opencv
+
+
+# Steps for calibrating camera
+1. copy left/right images to a folder and then run the rename_left_right_images.py script to get the data ready.
+2. run the calibrate camera script
+python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 --show-chessboards /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/calibration_images/ /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/calibration/
+3. Run the block tuner to try and get good params.
+python block_tuner.py --bm_settings bm_settings_rgbir.json /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/calibration/ /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/test/

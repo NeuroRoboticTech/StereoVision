@@ -412,6 +412,7 @@ class Ui_BlockTunerDlg(object):
 if __name__ == "__main__":
     import sys
 
+    print "Starting app"
     app = QApplication(sys.argv)
     BlockTunerDlg = QDialog()
     ui = Ui_BlockTunerDlg()
@@ -419,6 +420,7 @@ if __name__ == "__main__":
     ui.setDefaults()
     ui.connectSlots();
 
+    print "Reading arguments"
     parser = ArgumentParser(description="Read images taken from a calibrated "
                            "stereo pair, compute disparity maps from them and "
                            "show them interactively to the user, allowing the "
@@ -434,6 +436,7 @@ if __name__ == "__main__":
                         default="")
     args = parser.parse_args()
 
+    print "Creating stereo calibration"
     ui.calibration = StereoCalibration(input_folder=args.calibration_folder)
     ui.input_files = find_files(args.image_folder)
     if args.use_stereobm:
@@ -445,6 +448,7 @@ if __name__ == "__main__":
     ui.rectified_pair = ui.calibration.rectify(ui.image_pair)
     ui.tuner = BMTuner(ui.block_matcher, ui.calibration, ui.rectified_pair)
 
+    print "About to show dialog"
     BlockTunerDlg.show()
     
 #    for param in block_matcher.parameter_maxima:

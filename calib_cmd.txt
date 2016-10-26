@@ -1,9 +1,19 @@
 python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 --show-chessboards /media/dcofer/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/ /media/dcofer/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/calibration
  
+python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 --show-chessboards /media/dcofer/Backup/weed_analysis/stereo_images/color_8mm/calibration_images/ /media/dcofer/Backup/weed_analysis/stereo_images/color_8mm/calibration/
+
+python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 --show-chessboards /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/calibration_images/ /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/calibration/
+
+
+python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 /media/dcofer/Backup/weed_analysis/stereo_images/color_8mm/calibration_images/ /media/dcofer/Backup/weed_analysis/stereo_images/color_8mm/calibration/
+
 
 python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 --show-chessboards /media/ubuntu/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/ /media/ubuntu/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/calibration
 
 
+
+
+A-Lens
 1-4
 15.9995 
 
@@ -11,7 +21,7 @@ python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 --show-chessboar
 8.5085
 
 1-20
-5.203
+5.203fff
 
 1-30
 4.2299
@@ -19,12 +29,23 @@ python calibrate_cameras --rows 9 --columns 6 --square-size 2.5 --show-chessboar
 all 
 3.5022
 
+8mm Lens
+
+1-22
+16.0444310401
+
+all
+6.99287965475
 
 
+python block_tuner.py --bm_settings bm_settings_8mm.json /media/dcofer/Backup/weed_analysis/stereo_images/color_8mm/calibration/ /media/dcofer/Backup/weed_analysis/stereo_images/color_8mm/calibration_images/archive/
 
-python tune_blockmatcher --bm_settings bm_settings_corn.json /media/dcofer/Backup/weed_analysis/weed_images/CASA_073016/stereo_calibration/calibration /media/dcofer/Backup/weed_analysis/weed_images/stereo/box
+python tune_blockmatcher --bm_settings bm_settings_rgbir.json /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/calibration/ /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/test/
 
 
+python block_tuner.py --bm_settings bm_settings_8mm.json /media/dcofer/Backup/weed_analysis/stereo_images/color_8mm/calibration/ /media/dcofer/Backup/weed_analysis/stereo_images/color_8mm/calibration_images/archive/
+
+python block_tuner.py --bm_settings bm_settings_rgbir.json /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/calibration/ /media/dcofer/Backup/weed_analysis/stereo_images/RGBIR_2016_10_25/test/
 
 shed 0010
 279, 1117, 64, 1, 100, 0, 1, 3, 12, 13

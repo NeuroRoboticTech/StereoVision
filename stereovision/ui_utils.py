@@ -142,7 +142,6 @@ class BMTuner(object):
     The settable parameters are intelligently read from the ``BlockMatcher``,
     relying on the ``BlockMatcher`` exposing them as ``parameter_maxima``.
     """
-
     #: Window to show results in
     window_name = "BM Tuner"
 
@@ -162,6 +161,8 @@ class BMTuner(object):
                                self.block_matcher.__getattribute__(parameter))
 
     def __init__(self, block_matcher, calibration, image_pair):
+        print "starting up BMTuner"
+
         """
         Initialize tuner window and tune given pair.
 
@@ -180,9 +181,13 @@ class BMTuner(object):
         self.bm_settings = {}
         for parameter in self.block_matcher.parameter_maxima.keys():
             self.bm_settings[parameter] = []
+
+        print "Calling tune_pair"
         self.tune_pair(image_pair)
+        print "Finished tune_pair"
 
         print self.bm_settings
+        print "Finished BMTuner.init"
 
     def update_disparity_map(self):
         """
@@ -194,10 +199,13 @@ class BMTuner(object):
         """
         #key = ord('a')
         #while not key == ord('n'): 
+        print "Getting disparity map"
         disparity = self.block_matcher.get_disparity(self.pair)
+        print "Got disparity map"
         norm_coeff = 255 / disparity.max()
         new_disp = cv2.resize(disparity,None,fx=0.6, fy=0.6, interpolation = cv2.INTER_CUBIC)
 
+        print "Bluring disparity map"
         disp = (new_disp * norm_coeff / 255)
         filter_disp = cv2.medianBlur(disp, 5)      
         filter_disp = cv2.medianBlur(filter_disp, 5)      

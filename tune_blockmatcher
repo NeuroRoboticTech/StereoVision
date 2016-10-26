@@ -37,6 +37,7 @@ from stereovision.ui_utils import find_files, BMTuner, STEREO_BM_FLAG
 
 
 def main():
+    print "Reading arguments"
     parser = ArgumentParser(description="Read images taken from a calibrated "
                            "stereo pair, compute disparity maps from them and "
                            "show them interactively to the user, allowing the "
@@ -52,21 +53,38 @@ def main():
                         default="")
     args = parser.parse_args()
 
+    print "Creating Stereo Calibration"
     calibration = StereoCalibration(input_folder=args.calibration_folder)
     input_files = find_files(args.image_folder)
+
     if args.use_stereobm:
         block_matcher = StereoBM()
     else:
         block_matcher = StereoSGBM()
+    print "created block matcher"
+
     image_pair = [cv2.imread(image) for image in input_files[:2]]
+    print "Read image pairs"
+
     input_files = input_files[2:]
+
+    print "About to rectify"
     rectified_pair = calibration.rectify(image_pair)
+
+    print "About to BMTune"
     tuner = BMTuner(block_matcher, calibration, rectified_pair)
 
+    print "Processing input files"
+    print input_files
+
     while input_files:
+        print "Reading image files"
         image_pair = [cv2.imread(image) for image in input_files[:2]]
+        print "Calling calibration.rectify"
         rectified_pair = calibration.rectify(image_pair)
+        print "Rectified"
         tuner.tune_pair(rectified_pair)
+        print "tuned"
         input_files = input_files[2:]
 
     for param in block_matcher.parameter_maxima:
